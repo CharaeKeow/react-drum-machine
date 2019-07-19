@@ -66,6 +66,12 @@ class DrumPads extends React.Component {
     //sound.currentTime = 0;
     sound.play();
     sound.volume = 0.2; //Will work on this later       
+    /*Thanks to @no-stack-dub-sack for the excellent example. I tried other methods
+      but to no prevail (perhaps I still sucks at this.). So basically what we do here
+      is just pass value (in this case id) to function updateDisplay. See the comment
+      on updateDisplay function below for more info
+    */
+    this.props.updateDisplay(this.props.id);
   }
 
   /*
@@ -116,6 +122,13 @@ class DrumMachine extends React.Component {
     this.state = {
       display: ''      
     };    
+    this.displayID = this.displayID.bind(this);
+  }
+
+  displayID(id) {
+    this.setState({
+      display: id
+    });
   }
 
   render() {
@@ -126,7 +139,10 @@ class DrumMachine extends React.Component {
             value={item.keyTrigger} 
             url={item.url} 
             id={item.id} 
-            keyCode={item.keyCode}            
+            keyCode={item.keyCode}      
+            /*we set this variable and assign it a function 
+              to be passed as props to component below it */
+            updateState={this.displayID}
             />
         ))}            
         <p id="display">
