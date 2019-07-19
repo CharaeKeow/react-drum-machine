@@ -1,6 +1,8 @@
 import React from 'react';
 import './App.css';
-import { tsImportEqualsDeclaration } from '@babel/types';
+import ReactFCCtest from 'react-fcctest';
+
+
 //import { directive } from '@babel/types';
 
 const bankOne = [
@@ -55,20 +57,53 @@ const bankOne = [
 class DrumPads extends React.Component {
   constructor(props) {
     super(props);
-    this.handleClick = this.handleClick.bind(this);
+    this.playSound = this.playSound.bind(this);
+    this.keyPress = this.keyPress.bind(this);
   }
 
-  handleClick() {
-    const sound = document.getElementById(this.props.id);
-    sound.currentTime = 0;
+  playSound(event) {
+    const sound = document.getElementById(this.props.id);    
+    //sound.currentTime = 0;
     sound.play();
+    sound.volume = 0.2; //Will work on this later       
   }
 
+  /*
+    Can't be used directly even with onKeyClick, as it needs
+    an event listener (which, I presume, will listen for event globally).
+    So how do I handle that? Using componetDidMount() :)
+  */
+  keyPress(event) {
+    if (event.keyCode === this.props.keyCode) {
+      this.playSound();
+    }
+  }
+
+  /*
+    As stated before, we will add an event listener, for keydown event, 
+    once the component are mounted.
+  */
+  componentDidMount() {
+    document.addEventListener("keydown", this.keyPress);
+  }
+
+  /*
+    Seems like I also need this method to perform necessary clean up (or "unsubscribe", per React docs words)
+    for the event listener created in componentDidMount().
+    Without this, keydown will work once, any additional keydown after
+    that won't work. 
+    So what happens here is like we mount and unmount, thus rerendervaluein the
+    components.
+  */
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.keyPress)
+  }
+  
   render() {
     return (
-      <div className="drum-pads" onClick={this.handleClick}>
+      <div className="drum-pad" onClick={this.playSound}>
         {this.props.value}
-        <audio ref={this.props.keyTrigger} src={this.props.url} id={this.props.id}>
+        <audio value={this.props.keyTrigger} id={this.props.id} src={this.props.url}>
         </audio>
       </div>
     );
@@ -79,16 +114,24 @@ class DrumMachine extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: null
-    };        
-  }  
+      display: ''      
+    };    
+  }
 
   render() {
     return (
       <div id="drum-machine">
         {bankOne.map(item => (
-          <DrumPads value={item.keyTrigger} url={item.url} id={item.id}/>
-        ))}
+          <DrumPads 
+            value={item.keyTrigger} 
+            url={item.url} 
+            id={item.id} 
+            keyCode={item.keyCode}            
+            />
+        ))}            
+        <p id="display">
+          {this.state.display}
+        </p>
       </div>      
     );
   }
@@ -101,6 +144,7 @@ class App extends React.Component {
       <div>
         <h1>React Drum Machine</h1>
         <DrumMachine />
+        <ReactFCCtest />
       </div>
     );
   }
