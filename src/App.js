@@ -62,16 +62,16 @@ class DrumPads extends React.Component {
   }
 
   playSound(event) {
-    const sound = document.getElementById(this.props.id);    
+    const sound = document.getElementById(this.props.value);    
     //sound.currentTime = 0;
     sound.play();
-    sound.volume = 0.2; //Will work on this later       
+    sound.volume = this.props.volume; //Will work on this later       
     /*Thanks to @no-stack-dub-sack for the excellent example. I tried other methods
       but to no prevail (perhaps I still sucks at this.). So basically what we do here
       is just pass value (in this case id) to function updateDisplay. See the comment
       on updateDisplay function below for more info
     */
-    this.props.updateDisplay(this.props.id);
+    this.props.updateState(this.props.id);
   }
 
   /*
@@ -107,9 +107,9 @@ class DrumPads extends React.Component {
   
   render() {
     return (
-      <div className="drum-pad" onClick={this.playSound}>
+      <div className="drum-pad" onClick={this.playSound} id={this.props.id}>
         {this.props.value}
-        <audio value={this.props.keyTrigger} id={this.props.id} src={this.props.url}>
+        <audio className="clip" id={this.props.value} src={this.props.url}>
         </audio>
       </div>
     );
@@ -120,9 +120,12 @@ class DrumMachine extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      display: ''      
+      display: '',
+      sliderValue: 0.2,
+      volume: 20          
     };    
     this.displayID = this.displayID.bind(this);
+    this.changeVolume = this.changeVolume.bind(this);
   }
 
   displayID(id) {
@@ -131,24 +134,43 @@ class DrumMachine extends React.Component {
     });
   }
 
+  changeVolume(event) {
+    this.setState({
+      sliderValue: event.target.value,
+      volume: Math.round(event.target.value * 100)
+    })
+  }
+
   render() {
     return (
-      <div id="drum-machine">
-        {bankOne.map(item => (
-          <DrumPads 
-            value={item.keyTrigger} 
-            url={item.url} 
-            id={item.id} 
-            keyCode={item.keyCode}      
-            /*we set this variable and assign it a function 
+      <div className="container">
+        <div id="drum-machine">
+          {bankOne.map(item => (
+            <DrumPads 
+              value={item.keyTrigger} 
+              url={item.url} 
+              id={item.id} 
+              keyCode={item.keyCode}      
+              /*we set this variable and assign it a function 
               to be passed as props to component below it */
-            updateState={this.displayID}
+              updateState={this.displayID}
+              volume={this.state.sliderValue}
             />
-        ))}            
-        <p id="display">
-          {this.state.display}
-        </p>
-      </div>      
+          ))}            
+          </div>      
+          <div className="extras">
+            <div id="display">
+              {this.state.display}
+            </div>
+            <div className="volumeDisplay">
+              {this.state.volume}
+            </div>
+            <div className="sliderContainer">
+              <input type="range" min="0" max="1" step="0.01" value={this.state.sliderValue} onChange={this.changeVolume} className="slider" id="range" />
+            </div>
+          </div>
+        
+      </div>
     );
   }
 }

@@ -2,6 +2,13 @@ body {
   padding-left: 20px;
 }
 
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 500px;
+  background-color: #aaa;
+}
+
 .drum-pad {
   background: #fff;
   border: 1px solid #000;
@@ -9,8 +16,7 @@ body {
   height: 50px;
   width: 50px;
   line-height: 50px;
-  padding: 0;
-  margin: 10px;
+  margin: auto;
   border-radius: 5px;
   color: #000;
   text-align: center;
@@ -19,8 +25,9 @@ body {
 #drum-machine {
   width: 300px;
   display: grid;
-  grid-column-gap: 0;
-  grid-row-gap: 0;
+  grid-column-gap: 0px;
+  grid-row-gap: 10px;
+  padding: 20px 0;
   grid-template-columns: auto auto auto;
 }
 
@@ -31,4 +38,37 @@ body {
 .row:after {
   clear: both;
   display: table;
+}
+
+.extras {
+  background: #fff;
+  padding: 15px;
+}
+
+.sliderContainer {
+  width: 100%;  
+}
+
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 25px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  transition: opacity .2s;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  background: #4CAF50;
+  cursor: pointer;
 }
