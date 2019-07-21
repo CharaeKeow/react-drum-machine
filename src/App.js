@@ -1,8 +1,8 @@
 import React from 'react';
 import './App.css';
 import ReactFCCtest from 'react-fcctest';
-
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faPowerOff, faVolumeUp} from '@fortawesome/free-solid-svg-icons'
 //import { directive } from '@babel/types';
 
 const bankOne = [
@@ -54,24 +54,51 @@ const bankOne = [
   },
 ];
 
+const initialStyle = {
+  backgroundColor: '#1DB954'
+}
+
+const onPlayStyle = {
+  backgroundColor: '#fff',
+  color: '#000',
+  borderColor: '#fff',
+  transition: '0.15s'
+}
+
+const onPowerOff = {
+  backgroundColor: '#555',
+  color: '#777',
+  borderColor: '#555',
+  transition: '0.5s'
+}
+
 class DrumPads extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      style: initialStyle
+    }
     this.playSound = this.playSound.bind(this);
     this.keyPress = this.keyPress.bind(this);
+    this.updatePad = this.updatePad.bind(this);
+    this.darkenPad = this.darkenPad.bind(this);
   }
 
   playSound(event) {
-    const sound = document.getElementById(this.props.value);    
-    //sound.currentTime = 0;
-    sound.play();
-    sound.volume = this.props.volume; //Will work on this later       
-    /*Thanks to @no-stack-dub-sack for the excellent example. I tried other methods
+    if (this.props.power) { // Only play if power on
+      const sound = document.getElementById(this.props.value);    
+      sound.currentTime = 0;
+      sound.play();
+      sound.volume = this.props.volume; 
+      /*Thanks to @no-stack-dub-sack for the excellent example. I tried other methods
       but to no prevail (perhaps I still sucks at this.). So basically what we do here
       is just pass value (in this case id) to function updateDisplay. See the comment
       on updateDisplay function below for more info
-    */
-    this.props.updateState(this.props.id);
+      */
+      this.props.updateState(this.props.id);
+      this.updatePad();      
+      setTimeout(() => this.updatePad(), 100);
+    } 
   }
 
   /*
@@ -82,6 +109,28 @@ class DrumPads extends React.Component {
   keyPress(event) {
     if (event.keyCode === this.props.keyCode) {
       this.playSound();
+    }
+  }
+
+  updatePad() {
+    if (this.props.power) {
+      this.state.style.backgroundColor === '#fff' ?
+      this.setState({
+        style: initialStyle
+      }) :
+      this.setState({
+        style: onPlayStyle
+      });
+    } else {
+      this.darkenPad();
+    }
+  }
+
+  darkenPad() {
+    if (!this.props.power) {
+      this.setState({
+        style: onPowerOff
+      });
     }
   }
 
@@ -104,10 +153,10 @@ class DrumPads extends React.Component {
   componentWillUnmount() {
     document.removeEventListener("keydown", this.keyPress)
   }
-  
+
   render() {
     return (
-      <div className="drum-pad" onClick={this.playSound} id={this.props.id}>
+      <div className="drum-pad" onClick={this.playSound} id={this.props.id} style={this.state.style} >
         {this.props.value}
         <audio className="clip" id={this.props.value} src={this.props.url}>
         </audio>
@@ -116,29 +165,99 @@ class DrumPads extends React.Component {
   }
 }
 
+class ControlPanel extends React.Component {
+
+  render() {
+    return(
+      <div className="extras">
+        <div id="display">
+          {this.props.display}
+        </div>
+        <div className="volumeDisplay">
+          {this.props.volume}
+        </div>
+        <div className="sliderContainer">
+          <FontAwesomeIcon icon={faVolumeUp} className="volumeIcon"/>
+          <input type="range" min="0" max="1" step="0.01" 
+          value={this.props.sliderValue} onChange={this.props.changeVolume} 
+          className="slider" id="range" style={this.props.sliderColor}/>
+        </div>
+        <div className="powerButton">
+          <button onClick={this.props.powerSwitch} style={this.props.switchColor}>
+            <FontAwesomeIcon icon={faPowerOff} className="power" />
+          </button>
+        </div>
+      </div>         
+    );
+  }
+}
+
 class DrumMachine extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      display: '',
-      sliderValue: 0.2,
-      volume: 20          
+      display: 'Welcome',
+      sliderValue: 0.5,
+      volume: "Volume: " + 50,
+      power: true,
+      switchColor: {
+        color: '#1DB954'        
+      },
+      sliderColor: {
+        color: '#1DB954'
+      }
     };    
     this.displayID = this.displayID.bind(this);
     this.changeVolume = this.changeVolume.bind(this);
+    this.powerSwitch = this.powerSwitch.bind(this);
+    this.powerOn = this.powerOn.bind(this);
+    this.powerOff = this.powerOff.bind(this);
   }
 
   displayID(id) {
     this.setState({
       display: id
+    });    
+  }
+
+  changeVolume(event) {    
+    if (this.state.power) {
+      this.setState({        
+        volume: "Volume: " + Math.round(event.target.value * 100)
+      })
+    }
+    this.setState({
+      sliderValue: event.target.value,
+    })
+  }
+
+  powerOn() {
+    this.setState({
+      power: true, 
+      display: 'Welcome', 
+      volume: "Volume: " + this.state.sliderValue * 100, 
+      switchColor: {
+        color: '#1DB954'
+      }
     });
   }
 
-  changeVolume(event) {
+  powerOff() {
     this.setState({
-      sliderValue: event.target.value,
-      volume: Math.round(event.target.value * 100)
-    })
+      power: false, 
+      display: '', 
+      volume: '', 
+      switchColor: {
+        color: '#555'
+      },
+      sliderColor: {
+        backgroundColor: '#555'
+      }
+    });
+  }
+
+  powerSwitch() {
+    this.state.power ? this.powerOff() : this.powerOn();
   }
 
   render() {
@@ -147,29 +266,27 @@ class DrumMachine extends React.Component {
         <div id="drum-machine">
           {bankOne.map(item => (
             <DrumPads 
-              value={item.keyTrigger} 
-              url={item.url} 
-              id={item.id} 
-              keyCode={item.keyCode}      
+              value = {item.keyTrigger} 
+              url = {item.url} 
+              id = {item.id} 
+              keyCode = {item.keyCode}      
               /*we set this variable and assign it a function 
               to be passed as props to component below it */
-              updateState={this.displayID}
-              volume={this.state.sliderValue}
+              updateState = {this.displayID}
+              volume = {this.state.sliderValue}              
+              power = {this.state.power}          
             />
           ))}            
-          </div>      
-          <div className="extras">
-            <div id="display">
-              {this.state.display}
-            </div>
-            <div className="volumeDisplay">
-              {this.state.volume}
-            </div>
-            <div className="sliderContainer">
-              <input type="range" min="0" max="1" step="0.01" value={this.state.sliderValue} onChange={this.changeVolume} className="slider" id="range" />
-            </div>
           </div>
-        
+          <ControlPanel 
+            display = {this.state.display}
+            volume = {this.state.volume}
+            sliderVolume = {this.state.sliderValue}
+            changeVolume = {this.changeVolume}
+            powerSwitch={this.powerSwitch}
+            switchColor = {this.state.switchColor}
+            sliderColor = {this.state.sliderColor}
+          />         
       </div>
     );
   }
@@ -179,7 +296,7 @@ class App extends React.Component {
 
   render() {
     return(
-      <div>
+      <div className="outer-container">
         <h1>React Drum Machine</h1>
         <DrumMachine />
         <ReactFCCtest />
