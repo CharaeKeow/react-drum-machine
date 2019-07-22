@@ -1,11 +1,16 @@
+@import url('https://fonts.googleapis.com/css?family=Orbitron|Roboto&display=swap');
+
 body {
   display: flex;
   flex-direction: column;
   align-content: center;
   justify-content: center;
-  width: 98vw;
-  height: 98vh;
+  width: 100vw;
+  height: 100vh;
   background: #333;
+  user-select: none;
+  touch-action: manipulation;
+  font-family: 'Roboto', sans-serif;
 }
 
 #root {
@@ -37,7 +42,10 @@ body {
   bottom: 0;
   margin-bottom: -10px;
   position: absolute;
-  height: 0;
+  height: 10px;
+  font-family: 'Roboto', sans-serif;
+  color: #ddd;
+  font-size: 35px;
 }
 
 #drum-machine {
@@ -101,6 +109,7 @@ body {
   border-radius: 5px;
   /*color: #FFA730; */
   color: #aaa;
+  font-family: 'Orbitron', sans-serif;
 }
 
 #display {
@@ -110,7 +119,7 @@ body {
   align-content: center;
   justify-content: center;
   height: 40px;
-  font-size: 25px;
+  font-size: 22px;
   border-radius: 2px;
   color: #1DB954;
 }
@@ -175,4 +184,92 @@ body {
 .power:hover {
   text-shadow: #fff;
   transition: 0.2s;
+}
+
+footer {
+  color: #fff;
+  padding: 1px;
+}
+
+footer a {
+  color: #1DB954;
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+footer .heart {
+  color: red;
+}
+
+@media screen and (max-width: 650px) {
+  #root {
+    width: 100%;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .outer-container {
+    width: 350px;  
+  }
+
+  .container {
+    display: grid;
+    grid-template-rows: auto auto;
+    width: 100%;
+  }
+
+  #drum-machine {
+    grid-area: 2;
+    width: 350px;
+  }
+
+  .extras {
+    grid-area: 1;
+    width: 320px;
+    height: 150px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+  
+  #display {
+    grid-area: 1 / 1 / 1 / 5;
+    width: 100%;
+  }
+
+  .volumeDisplay {
+    grid-area: 2 / 1 / 2 / 3;
+  }
+
+  .sliderContainer {
+    margin-left: 5%;
+    grid-area: 2 / 3 / 2 / 5;
+    display: grid;
+    grid-template-rows: auto auto auto;
+    width: 100%;
+    padding-top: 20px;
+  }
+
+  .volumeIcon {
+    grid-area: 2 / 1 / 3 / 2;
+    margin-right: 30px;
+    margin-left: 0px;
+  }
+
+  .slider {
+    margin-left: -25%;
+    width: 110%;
+    grid-area: 2 / 2 / 3 / 3;
+  }
+
+  .powerButton {
+    grid-area: 3 / 2 / 3 / 3;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-left: 50%;    
+  }
 }

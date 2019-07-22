@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import ReactFCCtest from 'react-fcctest';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faPowerOff, faVolumeUp} from '@fortawesome/free-solid-svg-icons'
+import {faPowerOff, faVolumeUp, faHeart} from '@fortawesome/free-solid-svg-icons'
 //import { directive } from '@babel/types';
 
 const bankOne = [
@@ -238,6 +238,9 @@ class DrumMachine extends React.Component {
       volume: "Volume: " + this.state.sliderValue * 100, 
       switchColor: {
         color: '#1DB954'
+      },
+      sliderColor:{
+        color: '#1DB954'
       }
     });
   }
@@ -296,10 +299,16 @@ class App extends React.Component {
 
   render() {
     return(
-      <div className="outer-container">
-        <h1>React Drum Machine</h1>
-        <DrumMachine />
-        <ReactFCCtest />
+      <div>
+        <div className="outer-container">
+          <h1>React Drum Machine</h1>
+          <DrumMachine />
+          <ReactFCCtest />
+        </div>
+        <footer>
+          <p>Coded and designed with <FontAwesomeIcon icon={faHeart} className="heart" /> by <a href="https://github.com/CharaeKeow" target="_blank" rel="noopener noreferrer">Charae Keow.</a></p>
+          <p>The source code is available on <a href="https://github.com/CharaeKeow/react-drum-machine/tree/power-button" target="_blank" rel="noopener noreferrer">Github.</a></p>
+        </footer>
       </div>
     );
   }

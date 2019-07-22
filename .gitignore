@@ -1,1 +1,15 @@
 node_modules
+build/index.html
+build/asset-manifest.json
+build/favicon.ico
+build/manifest.json
+build/precache-manifest.e7de3a9be67634a4dae5910bcdb6141e.js
+build/service-worker.js
+build/static/css/main.c9a827de.chunk.css
+build/static/css/main.c9a827de.chunk.css.map
+build/static/js/2.bd62dd3e.chunk.js
+build/static/js/2.bd62dd3e.chunk.js.map
+build/static/js/main.fc3a6f45.chunk.js
+build/static/js/main.fc3a6f45.chunk.js.map
+build/static/js/runtime~main.515845b3.js
+build/static/js/runtime~main.515845b3.js.map
