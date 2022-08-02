@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import ReactFCCtest from 'react-fcctest';
+// import ReactFCCtest from 'react-fcctest';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faPowerOff, faVolumeUp, faHeart} from '@fortawesome/free-solid-svg-icons'
 //import { directive } from '@babel/types';
