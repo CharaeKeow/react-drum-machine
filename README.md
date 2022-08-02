@@ -16,3 +16,6 @@ For this project, I will use React to build a drum machine. The user stories, as
 - [x] When I press the trigger key associated with each .drum-pad, the audio clip contained in its child audio element should be triggered (e.g. pressing the Q key should trigger the drum pad which contains the string "Q", pressing the W key should trigger the drum pad which contains the string "W", etc.).
 
 - [x]  When a .drum-pad is triggered, a string describing the associated audio clip is displayed as the inner text of the #display element (each string must be unique).
+
+
+Live website: (https://charaekeow.github.io/react-drum-machine/)
